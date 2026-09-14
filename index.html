@@ -3,44 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AsoKajKoribot - Home</title>
+    <title>AsoKajKoribot - Dashboard</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #0f172a; color: #fff; text-align: center; padding: 20px; margin: 0; }
-        .card { background: #1e293b; padding: 20px; border-radius: 12px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .btn { background: #22c55e; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 15px; width: 100%; }
-        .btn:active { background: #16a34a; }
-        .ad-container { margin: 20px 0; min-height: 250px; background: #334155; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.4); }
+            50% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.4); }
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .container {
+            max-width: 450px;
+            margin: auto;
+            width: 100%;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        .header {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+        }
+        .stats-box {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        .stat-item {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            width: 45%;
+        }
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            animation: fadeIn 1s ease-in-out;
+        }
+        .ad-container {
+            margin: 15px 0;
+            min-height: 250px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: #94a3b8;
+            transition: 0.3s;
+        }
+        .btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: 0.3s;
+            animation: pulseGlow 2s infinite;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
     </style>
 </head>
 <body>
 
-    <h2>AsoKajKoribot ড্যাশবোর্ড</h2>
-    <p id="username">Loading user...</p>
-
-    <div class="card">
-        <h3>বিজ্ঞাপন দেখে আয় করুন</h3>
-        <p>নিচের অ্যাডটি দেখুন বা ভিজিট করুন:</p>
-        
-        <!-- Adsterra Ad Banner / Script এখানে বসবে -->
-        <div class="ad-container" id="adsterra-box">
-            <!-- আপনার Adsterra ad script কোডটি এখানে পেস্ট করুন -->
-            <p style="color: #94a3b8;">[Adsterra Ad Banner Zone]</p>
+    <div class="container">
+        <div class="header">
+            <h2 id="username" style="margin: 0; color: #38bdf8;">স্বাগতম!</h2>
+            <div class="stats-box">
+                <div class="stat-item">
+                    <small style="color: #94a3b8;">পয়েন্ট</small>
+                    <h3 id="user-points" style="margin: 5px 0; color: #22c55e;">0 PTS</h3>
+                </div>
+                <div class="stat-item">
+                    <small style="color: #94a3b8;">অ্যাড দেখা হয়েছে</small>
+                    <h3 id="ads-count" style="margin: 5px 0; color: #facc15;">0 টি</h3>
+                </div>
+            </div>
         </div>
 
-        <button class="btn" onclick="watchAd()">অ্যাড দেখা সম্পন্ন হয়েছে</button>
+        <div class="card">
+            <h3>📺 অ্যাড দেখে আয় করুন</h3>
+            <p style="font-size: 13px; color: #cbd5e1;">প্রতিটি সফল অ্যাড দেখার জন্য ১০ পয়েন্ট যোগ হবে।</p>
+            
+            <!-- Adsterra Ad Script কোড এখানে বসাবেন -->
+            <div class="ad-container" id="adsterra-box">
+                <p>[Adsterra Ad Banner / Script Zone]</p>
+            </div>
+
+            <button class="btn" onclick="claimReward()">সফলভাবে অ্যাড দেখা শেষ (+১০ পয়েন্ট)</button>
+        </div>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
 
+        let currentPoints = 0;
+        let totalAds = 0;
+
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
             document.getElementById('username').innerText = "স্বাগতম, " + tg.initDataUnsafe.user.first_name;
         }
 
-        function watchAd() {
-            alert("ধন্যবাদ! আপনার অ্যাড দেখা সফল হয়েছে।");
+        function claimReward() {
+            currentPoints += 10;
+            totalAds += 1;
+            document.getElementById('user-points').innerText = currentPoints + " PTS";
+            document.getElementById('ads-count').innerText = totalAds + " টি";
+            
+            tg.HapticFeedback.notificationOccurred('success');
+            alert("অভিনন্দন! ১০ পয়েন্ট সফলভাবে যোগ হয়েছে।");
         }
     </script>
 </body>
