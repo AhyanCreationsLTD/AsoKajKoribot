@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsoKajKoribot - Home</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #0f172a; color: #fff; text-align: center; padding: 20px; margin: 0; }
+        .card { background: #1e293b; padding: 20px; border-radius: 12px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .btn { background: #22c55e; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; margin-top: 15px; width: 100%; }
+        .btn:active { background: #16a34a; }
+        .ad-container { margin: 20px 0; min-height: 250px; background: #334155; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <h2>AsoKajKoribot ড্যাশবোর্ড</h2>
+    <p id="username">Loading user...</p>
+
+    <div class="card">
+        <h3>বিজ্ঞাপন দেখে আয় করুন</h3>
+        <p>নিচের অ্যাডটি দেখুন বা ভিজিট করুন:</p>
+        
+        <!-- Adsterra Ad Banner / Script এখানে বসবে -->
+        <div class="ad-container" id="adsterra-box">
+            <!-- আপনার Adsterra ad script কোডটি এখানে পেস্ট করুন -->
+            <p style="color: #94a3b8;">[Adsterra Ad Banner Zone]</p>
+        </div>
+
+        <button class="btn" onclick="watchAd()">অ্যাড দেখা সম্পন্ন হয়েছে</button>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            document.getElementById('username').innerText = "স্বাগতম, " + tg.initDataUnsafe.user.first_name;
+        }
+
+        function watchAd() {
+            alert("ধন্যবাদ! আপনার অ্যাড দেখা সফল হয়েছে।");
+        }
+    </script>
+</body>
+</html>
