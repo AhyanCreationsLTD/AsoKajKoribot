@@ -5,9 +5,10 @@ from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 # ================= CONFIGURATION =================
-TOKEN = "8825404684:AAF1MU7h671S_-oz7HnIjzZyWEHVwd1VAE8"            # এখানে আপনার BotFather-এর টোকেন দিন
-DB_CHANNEL_ID = -1004439983806           # এখানে আপনার প্রাইভেট ডাটাবেস চ্যানেলের আইডি দিন (মাইনাস সহ)
-MINI_APP_URL = "https://asokajkori.pages.dev"  # GitHub Pages বা হোস্টিং লিংক
+TOKEN = "8825404684:AAF1MU7h671S_-oz7HnIjzZyWEHVwd1VAE8"                # আপনার বটের টোকেন
+USER_DB_CHANNEL_ID = -1004439983806          # ইউজারের ডাটা সেভ করার চ্যানেল আইডি
+WITHDRAW_CHANNEL_ID = -1004356572684         # উইথড্র রিকোয়েস্ট জমা হওয়ার চ্যানেল আইডি
+MINI_APP_URL = "https://asokajkori.pages.dev"  # GitHub Pages লিংক
 # =================================================
 
 bot = Bot(token=TOKEN)
@@ -23,11 +24,10 @@ async def start_handler(message: types.Message):
     user_id = message.from_user.id
     name = message.from_user.first_name
     
-    # চ্যানেলে ইউজারের ডাটা ইনিশিয়ালাইজ বা ট্র্যাক করা
     if user_id not in user_message_map:
-        text = f"[USER_DATA]\nUser ID: {user_id}\nName: {name}\nBalance: 0.00 TK\nAds Watched: 0"
+        text = f"[USER_DATA]\nUser ID: {user_id}\nName: {name}\nPoints: 0\nAds Watched: 0"
         try:
-            sent_msg = await bot.send_message(chat_id=DB_CHANNEL_ID, text=text)
+            sent_msg = await bot.send_message(chat_id=USER_DB_CHANNEL_ID, text=text)
             user_message_map[user_id] = sent_msg.message_id
         except Exception as e:
             print(f"Channel Error: {e}")
@@ -39,7 +39,7 @@ async def start_handler(message: types.Message):
     builder.adjust(1)
     
     await message.answer(
-        f"স্বাগতম {name}!\n\n**AsoKajKoribot** এ আপনাকে স্বাগতম। নিচে থেকে মিনি অ্যাপ ওপেন করে বিজ্ঞাপন দেখে ইনকাম করুন এবং উইথড্র দিন।",
+        f"স্বাগতম {name}!\n\n✨ **AsoKajKoribot** এ আপনাকে স্বাগতম।\n💎 প্রতি অ্যাড ভিউ: ১০ পয়েন্ট\n📌 সর্বনিম্ন উইথড্র: ১০০০ পয়েন্ট\n\nনিচে থেকে মিনি অ্যাপ ওপেন করে কাজ শুরু করুন:",
         reply_markup=builder.as_markup(),
         parse_mode="Markdown"
     )
@@ -50,12 +50,12 @@ async def balance_handler(callback: types.CallbackQuery):
     msg_id = user_message_map.get(user_id)
     if msg_id:
         try:
-            chat_msg = await bot.get_message(chat_id=DB_CHANNEL_ID, message_id=msg_id)
+            chat_msg = await bot.get_message(chat_id=USER_DB_CHANNEL_ID, message_id=msg_id)
             await callback.answer(f"আপনার বর্তমান তথ্য:\n{chat_msg.text}", show_alert=True)
         except:
             await callback.answer("ডেটা পাওয়া যায়নি, দয়া করে আবার /start দিন।", show_alert=True)
     else:
-        await callback.answer("সেশন রিসেট হয়েছে, দয়া করে /start দিন।", show_alert=True)
+        await callback.answer("সেশন রিসেট হয়েছে, দয়া করে আবার /start দিন।", show_alert=True)
 
 @dp.callback_query(F.data == "withdraw_menu")
 async def withdraw_menu_handler(callback: types.CallbackQuery):
