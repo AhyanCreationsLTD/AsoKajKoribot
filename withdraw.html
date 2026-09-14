@@ -6,49 +6,141 @@
     <title>Withdraw - AsoKajKoribot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #0f172a; color: #fff; padding: 20px; margin: 0; }
-        .card { background: #1e293b; padding: 20px; border-radius: 12px; margin-top: 20px; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #334155; color: #fff; box-sizing: border-box; }
-        .btn { background: #3b82f6; color: white; border: none; padding: 12px; font-size: 16px; border-radius: 8px; cursor: pointer; width: 100%; }
-        .btn:active { background: #2563eb; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        label {
+            font-size: 14px;
+            color: #94a3b8;
+            display: block;
+            margin-top: 12px;
+            text-align: left;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(15, 23, 42, 0.8);
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 10px;
+            font-size: 13px;
+            color: #93c5fd;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
     </style>
 </head>
 <body>
 
-    <h2>উইথড্র রিকোয়েস্ট</h2>
-    
     <div class="card">
-        <label>পেমেন্ট মেথড:</label>
-        <select id="method">
+        <h2 style="margin-top: 0; color: #38bdf8;">💸 উইথড্র রিকোয়েস্ট</h2>
+        
+        <div class="info-box">
+            📌 সর্বনিম্ন উইথড্র: <b>১০০০ পয়েন্ট</b> (১০ টাকা / ০.১০ USDT)
+        </div>
+
+        <label>পেমেন্ট মেথড সিলেক্ট করুন:</label>
+        <select id="method" onchange="updatePlaceholder()">
             <option value="Bkash">বিকাশ (Bkash)</option>
             <option value="Nagad">নগদ (Nagad)</option>
-            <option value="Binance">বাইনান্স (USDT)</option>
+            <option value="USDT">ক্রিপ্টো বাইনান্স (USDT TRC20)</option>
         </select>
 
-        <label>অ্যাকাউন্ট নম্বর:</label>
-        <input type="text" id="account" placeholder="017xxxxxxxx বা Wallet Address">
+        <label id="account-label">বিকাশ নম্বর:</label>
+        <input type="text" id="account" placeholder="017xxxxxxxx">
 
-        <label>টাকার পরিমাণ:</label>
-        <input type="number" id="amount" placeholder="সর্বনিম্ন ১০০ টাকা">
+        <label>পয়েন্টের পরিমাণ (Points):</label>
+        <input type="number" id="amount" placeholder="কমপক্ষে ১০০০ পয়েন্ট">
 
-        <button class="btn" onclick="submitWithdraw()">রিকোয়েস্ট পাঠান</button>
+        <button class="btn" onclick="submitWithdraw()">উইথড্র রিকোয়েস্ট পাঠান</button>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
 
+        function updatePlaceholder() {
+            let method = document.getElementById('method').value;
+            let label = document.getElementById('account-label');
+            let input = document.getElementById('account');
+
+            if (method === 'Bkash') {
+                label.innerText = "বিকাশ নম্বর:";
+                input.placeholder = "017xxxxxxxx";
+            } else if (method === 'Nagad') {
+                label.innerText = "নগদ নম্বর:";
+                input.placeholder = "018xxxxxxxx";
+            } else if (method === 'USDT') {
+                label.innerText = "USDT (TRC20) ওয়ালেট অ্যাড্রেস:";
+                input.placeholder = "Txxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+            }
+        }
+
         function submitWithdraw() {
             let method = document.getElementById('method').value;
             let account = document.getElementById('account').value;
             let amount = document.getElementById('amount').value;
 
-            if(!account || !amount) {
+            if (!account || !amount) {
                 alert("দয়া করে সকল তথ্য সঠিকভাবে পূরণ করুন!");
                 return;
             }
 
-            alert(`আপনার ${amount} টাকার রিকোয়েস্ট ${method} (${account}) নম্বরে সফলভাবে সাবমিট হয়েছে!`);
+            if (parseInt(amount) < 1000) {
+                alert("দুঃখিত! সর্বনিম্ন উইথড্র ১০০০ পয়েন্ট।");
+                return;
+            }
+
+            tg.HapticFeedback.notificationOccurred('success');
+            alert(`আপনার ${amount} পয়েন্টের উইথড্র রিকোয়েস্ট ${method} (${account}) মাধ্যমে সফলভাবে জমা হয়েছে!`);
             tg.close();
         }
     </script>
