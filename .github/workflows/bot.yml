@@ -22,10 +22,6 @@ jobs:
           pip install aiogram requests
 
       - name: Run AsoKajKoribot
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          DB_CHANNEL_ID: ${{ secrets.DB_CHANNEL_ID }}
-          MINI_APP_URL: ${{ secrets.MINI_APP_URL }}
         run: |
           python bot.py
 
