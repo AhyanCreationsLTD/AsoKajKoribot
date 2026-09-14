@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw - AsoKajKoribot</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background: #0f172a; color: #fff; padding: 20px; margin: 0; }
+        .card { background: #1e293b; padding: 20px; border-radius: 12px; margin-top: 20px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #334155; color: #fff; box-sizing: border-box; }
+        .btn { background: #3b82f6; color: white; border: none; padding: 12px; font-size: 16px; border-radius: 8px; cursor: pointer; width: 100%; }
+        .btn:active { background: #2563eb; }
+    </style>
+</head>
+<body>
+
+    <h2>উইথড্র রিকোয়েস্ট</h2>
+    
+    <div class="card">
+        <label>পেমেন্ট মেথড:</label>
+        <select id="method">
+            <option value="Bkash">বিকাশ (Bkash)</option>
+            <option value="Nagad">নগদ (Nagad)</option>
+            <option value="Binance">বাইনান্স (USDT)</option>
+        </select>
+
+        <label>অ্যাকাউন্ট নম্বর:</label>
+        <input type="text" id="account" placeholder="017xxxxxxxx বা Wallet Address">
+
+        <label>টাকার পরিমাণ:</label>
+        <input type="number" id="amount" placeholder="সর্বনিম্ন ১০০ টাকা">
+
+        <button class="btn" onclick="submitWithdraw()">রিকোয়েস্ট পাঠান</button>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function submitWithdraw() {
+            let method = document.getElementById('method').value;
+            let account = document.getElementById('account').value;
+            let amount = document.getElementById('amount').value;
+
+            if(!account || !amount) {
+                alert("দয়া করে সকল তথ্য সঠিকভাবে পূরণ করুন!");
+                return;
+            }
+
+            alert(`আপনার ${amount} টাকার রিকোয়েস্ট ${method} (${account}) নম্বরে সফলভাবে সাবমিট হয়েছে!`);
+            tg.close();
+        }
+    </script>
+</body>
+</html>
